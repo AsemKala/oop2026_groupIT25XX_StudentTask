@@ -9,12 +9,12 @@ import java.util.Scanner;
 public class TaskService {
     ArrayList<Task> tasks = new ArrayList<>();
 
-    public void addTask(String name, Project project, String status){
+    public void addTask(String name, Project project, Boolean status){
         Task task = new Task(name,project, status);
         tasks.add(task);
         System.out.println("Task was added");
     }
-    public void ChangeStatus(int id, String newStatus){
+    public void ChangeStatus(int id, Boolean newStatus){
         for (Task task : tasks){
             if(task.getId() == id){
                 task.setStatus(newStatus);
