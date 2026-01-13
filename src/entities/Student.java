@@ -1,13 +1,13 @@
 package entities;
 
-public class User {
+public class Student {
     private int id;
     private int idGen;
     private String name;
     private String email;
 
 
-    public User(String name, String email){
+    public Student(String name, String email){
         id = idGen;
         idGen++;
         setName(name);

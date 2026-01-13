@@ -2,14 +2,14 @@ package Controllers;
 import entities.Comment;
 import entities.Project;
 import entities.Task;
-import entities.User;
+import entities.Student;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Control {
     Scanner scanner = new Scanner(System.in);
-    ArrayList<User> users = new ArrayList<>();
+    ArrayList<Student> students = new ArrayList<>();
     ArrayList<Task> tasks = new ArrayList<>();
     ArrayList<Project> projects = new ArrayList<>();
     ArrayList<Comment> comments = new ArrayList<>();
