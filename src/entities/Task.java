@@ -6,9 +6,9 @@ public class Task {
     private String taskName;
     private String link;
     private Project project;
-    private String status;
+    private Boolean status;
 
-    public Task(String taskName, Project project, String status){
+    public Task(String taskName, Project project, Boolean status){
         id = idGen;
         idGen++;
         setTaskName(taskName);
@@ -35,13 +35,10 @@ public class Task {
         return this.id;
     }
 
-    public String getStatus(){
+    public Boolean getStatus(){
         return  this.status;
     }
-    public void setStatus(String status){
-        if(status == null || status.isEmpty()){
-            throw new IllegalArgumentException("Project must be specified");
-        }
+    public void setStatus(Boolean status){
         this.status = status;
     }
 

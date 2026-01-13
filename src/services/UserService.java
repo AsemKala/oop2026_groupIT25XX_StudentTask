@@ -1,23 +1,46 @@
 package services;
 
+
+import com.sun.jdi.request.DuplicateRequestException;
+import data.interfaces.IUserRepository;
 import entities.User;
-import java.util.ArrayList;
+import exceptions.DuplicateEmailException;
+import exceptions.UserNotFoundException;
 
 public class UserService {
-    ArrayList<User> users = new ArrayList<>();
-    public void addUser(String name, String email){
-        User user = new User(name, email);
-        users.add(user);
-        System.out.println("User was added");
+    private IUserRepository userRepository;
+
+    public UserService(IUserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public void findUser(String name){
-        for (User user: users){
-            if(user.getName().equals(name)){
-                System.out.println(user);
-                break;
-            }
+    public void creteUser(User user) {
+        User existingUser = userRepository.findByEmail(user.getEmail());
+
+        if (existingUser != null || user.getName().isBlank()) {
+            throw new DuplicateEmailException("User with email " + user.getEmail() + " already exists");
         }
+
+        userRepository.create(user);
     }
 
+    public User getUserById(int id) {
+        User user = userRepository.findById(id);
+        if (user == null) {
+            throw new UserNotFoundException("User with ID " + id + " not found");
+        }
+        return user;
+    }
+
+    public User getUserByEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email cannot be blank");
+        }
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User with email " + email + " not found");
+        }
+        return user;
+    }
 }
