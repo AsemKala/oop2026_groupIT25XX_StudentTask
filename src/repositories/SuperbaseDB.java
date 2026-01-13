@@ -14,7 +14,9 @@ public class SuperbaseDB implements IDB {
     private String password;
 
     public SuperbaseDB(String url, String user, String password) {
-
+        setUrl(url);
+        setUser(user);
+        setPassword(password);
     }
 
     @Override
@@ -30,9 +32,11 @@ public class SuperbaseDB implements IDB {
 
         } catch (Exception e) {
             System.out.println("Failed to connect to SuperbaseDB");
-
-            return null;
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
+
+        return null;
     }
 
     @Override
