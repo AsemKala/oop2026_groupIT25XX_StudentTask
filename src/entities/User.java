@@ -10,12 +10,6 @@ public class User {
         this.id = 0;
     }
 
-    public User(String name, String email, String group) {
-        this.id = 0;
-        setName(name);
-        setEmail(email);
-        setGroup(group);
-    }
 
     public User(int id, String name, String email, String group) {
         this.id = id;
