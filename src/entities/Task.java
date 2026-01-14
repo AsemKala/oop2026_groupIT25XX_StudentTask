@@ -2,15 +2,12 @@ package entities;
 
 public class Task {
     private int id;
-    private static int idGen;
     private String taskName;
-    private String link;
     private Project project;
     private Boolean status;
 
-    public Task(String taskName, Project project, Boolean status){
-        id = idGen;
-        idGen++;
+    public Task(String taskName, Project project, boolean status){
+        this.id = id;
         setTaskName(taskName);
         setProject(project);
         this.status = status;
