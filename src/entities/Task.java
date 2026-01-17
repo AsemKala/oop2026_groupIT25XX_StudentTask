@@ -14,8 +14,12 @@ public class Task {
     }
     public Task(int id,String name, Boolean status, String createdAt, String finishAt, int idProject, int idUser){
         this.id = id;
-        setTaskName(taskName);
+        setTaskName(name);
         this.status = status;
+        this.createdAt = createdAt;
+        this.finishAt = finishAt;
+        this.idProject = idProject;
+        this.idUser = idUser;
     }
     public void setTaskName(String taskName){
         if(taskName.isEmpty()){
@@ -23,7 +27,6 @@ public class Task {
         }
         this.taskName = taskName;
     }
-
 
     public String getName(){
         return this.taskName;
