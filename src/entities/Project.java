@@ -4,8 +4,10 @@ public class Project {
     private int id;
     private String name;
 
-
-    public Project(String name){
+    public Project(){
+        this.id = 0;
+    }
+    public Project(int id, String name){
         this.id = id;
         setName(name);
     }

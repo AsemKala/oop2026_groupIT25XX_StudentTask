@@ -1,49 +1,32 @@
 package services;
 
 import com.sun.jdi.request.DuplicateRequestException;
+import data.interfaces.IDB;
+import data.interfaces.ITaskRepository;
 import entities.Project;
 import entities.Task;
+import exceptions.TaskNotFoundException;
+import repositories.TaskRepository;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class TaskService {
-
-
-
-    private String name = "";
-    private String link = "";
-    private String password = "";
-
-    public void AddTask(String name, String finish_at, int id_prokect, int user_id){
-
-        try(Connection conn = DriverManager.getConnection(link, name, password)){
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM tasks");
-            while (resultSet.next()){
-                if(!resultSet.getString(name).isEmpty()){
-                    throw new DuplicateRequestException("This task already exists");
-                }
-                else{
-                    int row = statement.executeUpdate("insert Tasks(name, finish_at, id_project, id_user) VALUES (?,?,?,?)");
-                    System.out.println("Task was added");
-                }
-            }
-        }catch(Exception e){
-            throw new IllegalArgumentException("Error 505");
-        }
+    private ITaskRepository TaskRepository;
+    public TaskService(ITaskRepository TaskRepository){
+        this.TaskRepository = TaskRepository;
     }
-    public void ChangeStatus(int id, boolean status){
-        try(Connection conn = DriverManager.getConnection(link, name, password)){
-            Statement statement = conn.createStatement();
-            int rows = statement.executeUpdate("Update Tasks SET status = status where id = id");
-            System.out.println("Status was changed");
-        }catch(Exception e){
-            throw new IllegalArgumentException("Error");
-        }
+
+    public void AddTAsk(String name, String finish_at, int id_project, int user_id){
+        Task task = TaskRepository.AddTask(name,finish_at,id_project,user_id);
     }
+    public void FindById(int id){
+        Task task = TaskRepository.FindTaskById(id);
+    }
+    public void changeStatus(int id, boolean status){
+        Task task = TaskRepository.ChangeStatus(id, status);
+    }
+
+
 }

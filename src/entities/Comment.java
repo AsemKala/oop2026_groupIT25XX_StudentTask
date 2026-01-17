@@ -1,18 +1,21 @@
 package entities;
 
+import java.util.EmptyStackException;
+
 public class Comment {
     private int id;
     private static int idGen;
     private String message;
 
+    public Comment(){
+        this.id = 0;
+    }
     public Comment(String message){
-        id = idGen;
-        idGen++;
         setMessage(message);
     }
     public void setMessage(String message){
         if(message.isEmpty()){
-            throw new IllegalArgumentException("message can't be null");
+            throw new NullPointerException("Value is null!");
         }
         this.message = message;
     }

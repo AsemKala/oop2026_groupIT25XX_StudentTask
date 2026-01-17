@@ -15,6 +15,7 @@ public class Main {
 
         IUserRepository userRepo = new UserRepository(database);
         UserService userService = new UserService(userRepo);
+
         try {
             User user = new User();
             user.setName("Zangar");

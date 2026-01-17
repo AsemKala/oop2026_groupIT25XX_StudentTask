@@ -3,28 +3,28 @@ package entities;
 public class Task {
     private int id;
     private String taskName;
-    private Project project;
+    private String createdAt;
+    private String finishAt;
+    private int idProject;
+    private int idUser;
     private Boolean status;
 
-    public Task(String taskName, Project project, boolean status){
+    public Task(){
+        this.id = 0;
+    }
+    public Task(int id,String name, Boolean status, String createdAt, String finishAt, int idProject, int idUser){
         this.id = id;
         setTaskName(taskName);
-        setProject(project);
         this.status = status;
     }
     public void setTaskName(String taskName){
         if(taskName.isEmpty()){
-            throw new IllegalArgumentException("taskName can't be null");
+            throw new NullPointerException("taskName is null");
         }
         this.taskName = taskName;
     }
 
-    public void setProject(Project project){
-        if(project == null){
-            throw new IllegalArgumentException("Project must be specified");
-        }
-        this.project = project;
-    }
+
     public String getName(){
         return this.taskName;
     }
