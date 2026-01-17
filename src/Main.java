@@ -19,7 +19,7 @@ public class Main {
         try {
             User user = new User();
             user.setName("Zangar");
-            user.setEmail("zangar@example.com");
+            user.setEmail("ernur@example.com");
             user.setGroup("IT-2508");
             userService.creteUser(user);
             System.out.println("Created successfully!");

@@ -2,7 +2,6 @@ package entities;
 
 public class Project {
     private int id;
-    private static int idGen;
     private String name;
 
     public Project(){

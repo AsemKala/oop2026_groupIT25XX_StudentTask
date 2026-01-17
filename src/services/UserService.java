@@ -7,8 +7,6 @@ import entities.User;
 import exceptions.DuplicateEmailException;
 import exceptions.UserNotFoundException;
 
-import java.util.List;
-
 public class UserService {
     private IUserRepository userRepository;
 
@@ -44,9 +42,5 @@ public class UserService {
             throw new UserNotFoundException("User with email " + email + " not found");
         }
         return user;
-    }
-
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
     }
 }
