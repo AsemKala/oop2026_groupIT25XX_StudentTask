@@ -1,26 +1,32 @@
 package services;
 
+import com.sun.jdi.request.DuplicateRequestException;
+import data.interfaces.IDB;
+import data.interfaces.ITaskRepository;
 import entities.Project;
 import entities.Task;
+import exceptions.TaskNotFoundException;
+import repositories.TaskRepository;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class TaskService {
-    ArrayList<Task> tasks = new ArrayList<>();
+    private ITaskRepository TaskRepository;
+    public TaskService(ITaskRepository TaskRepository){
+        this.TaskRepository = TaskRepository;
+    }
 
-    public void addTask(String name, Project project, String status){
-        Task task = new Task(name,project, status);
-        tasks.add(task);
-        System.out.println("Task was added");
+    public void AddTAsk(String name, String finish_at, int id_project, int user_id){
+        Task task = TaskRepository.add(name,finish_at,id_project,user_id);
     }
-    public void ChangeStatus(int id, String newStatus){
-        for (Task task : tasks){
-            if(task.getId() == id){
-                task.setStatus(newStatus);
-                System.out.println("Status was changed");
-                return;
-            }
-        }
+    public void FindById(int id){
+        Task task = TaskRepository.findById(id);
     }
+    public void changeStatus(int id, boolean status){
+        Task task = TaskRepository.changeStatus(id, status);
+    }
+
+
 }
