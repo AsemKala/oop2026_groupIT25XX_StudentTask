@@ -5,10 +5,11 @@ public class Project {
     private static int idGen;
     private String name;
 
-
-    public Project(String name){
-        id = idGen;
-        idGen++;
+    public Project(){
+        this.id = 0;
+    }
+    public Project(int id, String name){
+        this.id = id;
         setName(name);
     }
     public void setName(String name){

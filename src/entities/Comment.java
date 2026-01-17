@@ -24,21 +24,15 @@ public class Comment {
         setUserId(userId);
     }
 
-    public Comment(int id, String content, String createdAt, int taskId, int userId) {
-        setId(id);
-        setContent(content);
-        setCreatedAt(createdAt);
-        setTaskId(taskId);
-        setUserId(userId);
+    public Comment(){
+        this.id = 0;
     }
-
-    public void setId(int id) {
-        this.id = id;
+    public Comment(String message){
+        setMessage(message);
     }
-
-    public void setContent(String content){
-        if(content == null || content.isEmpty()){
-            throw new IllegalArgumentException("message can't be empty");
+    public void setMessage(String message){
+        if(message.isEmpty()){
+            throw new NullPointerException("Value is null!");
         }
         this.content = content;
     }

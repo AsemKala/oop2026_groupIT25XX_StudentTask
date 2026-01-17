@@ -21,23 +21,9 @@ public class ProjectService {
 
     public void createProject(Project project) {
 
-        User owner = userRepository.findById(project.getOwnerId());
-        if (owner == null) {
-            throw new UserNotFoundException("Owner user with ID " + project.getOwnerId() + " not found");
-        }
-
-        if (isDeadlineInPast(project.getDeadline())) {
-            throw new DeadlineInPastException("Project deadline cannot be in the past");
-        }
-
-        List<Project> ownerProjects = projectRepository.findByOwnerId(project.getOwnerId());
-        for (Project existingProject : ownerProjects) {
-            if (existingProject.getName().equalsIgnoreCase(project.getName())) {
-                throw new DuplicateProjectNameException("You already have a project named '" + project.getName() + "'");
-            }
-        }
-
-        projectRepository.create(project);
+    public void addProject(int id,String name){
+        Project project = new Project(id,name);
+        projects.add(project);
     }
 
     public Project getProjectById(int id) {
