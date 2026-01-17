@@ -1,5 +1,7 @@
 package entities;
 
+import java.security.PublicKey;
+
 public class User {
     private int id;
     private String name;
@@ -16,6 +18,11 @@ public class User {
         setName(name);
         setEmail(email);
         setGroup(group);
+    }
+
+
+    public void setID(int id) {
+        this.id = id;
     }
 
     public void setName(String name){
