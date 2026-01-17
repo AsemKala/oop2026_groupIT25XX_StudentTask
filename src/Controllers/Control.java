@@ -80,7 +80,7 @@ public class Control {
     public void AddComments(){
         System.out.println("Enter Message: ");
         String message = scanner.nextLine();
-        Comment comment = new Comment(message);
+        Comment comment = new Comment();
         comments.add(comment);
         System.out.println(comment);
     }
