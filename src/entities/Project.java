@@ -2,11 +2,13 @@ package entities;
 
 public class Project {
     private int id;
+    private static int idGen;
     private String name;
 
 
     public Project(String name){
-        this.id = id;
+        id = idGen;
+        idGen++;
         setName(name);
     }
     public void setName(String name){

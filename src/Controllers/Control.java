@@ -56,14 +56,14 @@ public class Control {
         String name = scanner.nextLine();
         System.out.println("Enter Name Proj: ");
         String nameProj = scanner.nextLine();
-        Project project = new Project(nameProj);
+        Project project = new Project();
         tasks.add(new Task(name, project , true));
         System.out.println(project);
     }
     public void CreateProject(){
         System.out.println("Enter Name Project: ");
         String name = scanner.nextLine();
-        Project project = new Project(name);
+        Project project = new Project();
         projects.add(project);
         System.out.println(project);
     }
