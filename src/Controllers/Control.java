@@ -57,7 +57,7 @@ public class Control {
         System.out.println("Enter Name Proj: ");
         String nameProj = scanner.nextLine();
         Project project = new Project();
-        tasks.add(new Task(name, project , true));
+        tasks.add(new Task());
         System.out.println(project);
     }
     public void CreateProject(){
