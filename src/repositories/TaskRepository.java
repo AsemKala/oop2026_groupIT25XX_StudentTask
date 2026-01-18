@@ -6,6 +6,8 @@ import entities.Task;
 import exceptions.DatabaseOperationException;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 public class TaskRepository implements ITaskRepository {
@@ -60,6 +62,8 @@ public class TaskRepository implements ITaskRepository {
                 task.setStatus(newStatus);
             }
 
+            finish(task);
+
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to change task status: " + e.getMessage(), e);
         }
@@ -93,6 +97,27 @@ public class TaskRepository implements ITaskRepository {
         }
         catch (SQLException e) {
             throw new DatabaseOperationException("Failed to find task by ID: " + e.getMessage(), e);
+        }
+    }
+
+    private void finish(Task task) {
+        String sql = "UPDATE tasks SET finish_at = CURRENT_DATE WHERE id = ?";
+
+        try (Connection conn = database.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setInt(1, task.getId());
+
+            int affected_rows = statement.executeUpdate();
+
+            if (affected_rows > 0) {
+                task.setFinishAt(LocalDate.now().format(
+                        DateTimeFormatter.ofPattern("MM/dd/yyyy")
+                ));
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to update finished date: " + e.getMessage(), e);
         }
     }
 }
