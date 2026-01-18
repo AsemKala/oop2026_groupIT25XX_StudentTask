@@ -65,7 +65,7 @@ public class UserRepository implements IUserRepository {
         try (Connection conn = database.getConnection();
              PreparedStatement statement = conn.prepareStatement(sql)) {
 
-            statement.setInt(1, id); // Use setInt, not setString
+            statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {

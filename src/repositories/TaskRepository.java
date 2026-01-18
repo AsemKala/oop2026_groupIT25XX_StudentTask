@@ -7,6 +7,7 @@ import entities.Task;
 import exceptions.TaskNotFoundException;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -18,8 +19,6 @@ public class TaskRepository implements ITaskRepository {
         this.database = database;
     }
 
-    public TaskRepository(String name, String finishAt, int idProject, int userId) {
-    }
     @Override
     public Task add(String name, String finish_at, int id_project, int user_id) {
 
@@ -51,20 +50,24 @@ public class TaskRepository implements ITaskRepository {
         }
 
     }
+
     @Override
     public Task findById(int id) {
-        try (Connection conn = database.getConnection()) {
-            Statement statement = conn.createStatement();
-            ResultSet res = statement.executeQuery("SELECT * from Tasks");
+        String sql = "SELECT * from tasks WHERE id = ?";
+
+        try (Connection conn = database.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet res = statement.executeQuery();
             if (res.next()) {
                 int idTask = res.getInt("id");
-                String taskname = res.getString("taskname");
+                String taskName = res.getString("name");
                 String finish_at = res.getString("finish_at");
                 String created_at = res.getString("created_at");
                 int idProject = res.getInt("id_project");
                 int idUser = res.getInt("id_user");
-                boolean status = res.getBoolean("status_at");
-                return new Task(idTask, taskname, status, created_at, finish_at, idProject, idUser);
+                boolean status = res.getBoolean("status");
+                return new Task(idTask, taskName, status, created_at, finish_at, idProject, idUser);
             }
 
             return null;

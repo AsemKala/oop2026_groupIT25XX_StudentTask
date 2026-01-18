@@ -47,7 +47,7 @@ public class CommentRepository implements ICommentRepository {
 
     @Override
     public List<Comment> findByTaskId(int taskId) {
-        String sql = "SELECT id, name, description, deadline, created_at, task_id FROM comments WHERE task_id = ?";
+        String sql = "SELECT id, content, created_at, task_id, user_id FROM comments WHERE task_id = ?";
         List<Comment> comments = new ArrayList<>();
 
         try (Connection conn = database.getConnection();

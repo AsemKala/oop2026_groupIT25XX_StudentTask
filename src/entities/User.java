@@ -14,7 +14,7 @@ public class User {
 
 
     public User(int id, String name, String email, String group) {
-        this.id = id;
+        setID(id);
         setName(name);
         setEmail(email);
         setGroup(group);
