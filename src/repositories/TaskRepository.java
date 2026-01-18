@@ -14,6 +14,10 @@ public class TaskRepository implements ITaskRepository {
     private final IDB database;
 
     public TaskRepository(IDB database) {
+        if (database == null) {
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+
         this.database = database;
     }
 

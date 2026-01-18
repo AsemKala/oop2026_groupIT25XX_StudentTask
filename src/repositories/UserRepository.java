@@ -13,6 +13,10 @@ public class UserRepository implements IUserRepository {
     private final IDB database;
 
     public UserRepository(IDB database) {
+        if (database == null) {
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+
         this.database = database;
     }
 

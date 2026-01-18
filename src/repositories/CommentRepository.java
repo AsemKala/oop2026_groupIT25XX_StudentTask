@@ -16,6 +16,10 @@ public class CommentRepository implements ICommentRepository {
     private final IDB database;
     
     public CommentRepository(IDB database) {
+        if (database == null) {
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+
         this.database = database;
     }
 
