@@ -10,7 +10,7 @@ import exceptions.UserNotFoundException;
 import java.util.List;
 
 public class UserService {
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
 
     public UserService(IUserRepository userRepository) {
         this.userRepository = userRepository;

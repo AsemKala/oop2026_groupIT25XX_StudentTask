@@ -12,9 +12,9 @@ import exceptions.TaskNotFoundException;
 import exceptions.UserNotFoundException;
 
 public class TaskService {
-    private ITaskRepository taskRepository;
-    private IUserRepository userRepository;
-    private IProjectRepository projectRepository;
+    private final ITaskRepository taskRepository;
+    private final IUserRepository userRepository;
+    private final IProjectRepository projectRepository;
 
     public TaskService(ITaskRepository taskRepository, IUserRepository userRepository, IProjectRepository projectRepository){
         this.taskRepository = taskRepository;

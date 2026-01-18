@@ -3,10 +3,7 @@ package repositories;
 import data.interfaces.ICommentRepository;
 import data.interfaces.IDB;
 import entities.Comment;
-import entities.Project;
-import entities.User;
 import exceptions.DatabaseOperationException;
-import exceptions.UserNotFoundException;
 
 import java.sql.*;
 import java.util.ArrayList;

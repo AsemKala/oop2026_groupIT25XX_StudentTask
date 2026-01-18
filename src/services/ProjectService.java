@@ -11,8 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ProjectService {
-    private IProjectRepository projectRepository;
-    private IUserRepository userRepository;  // ✓ Need this to validate owner exists
+    private final IProjectRepository projectRepository;
+    private final IUserRepository userRepository;
 
     public ProjectService(IProjectRepository projectRepository, IUserRepository userRepository) {
         this.projectRepository = projectRepository;
