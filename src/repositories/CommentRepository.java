@@ -3,10 +3,7 @@ package repositories;
 import data.interfaces.ICommentRepository;
 import data.interfaces.IDB;
 import entities.Comment;
-import entities.Project;
-import entities.User;
 import exceptions.DatabaseOperationException;
-import exceptions.UserNotFoundException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,6 +13,10 @@ public class CommentRepository implements ICommentRepository {
     private final IDB database;
     
     public CommentRepository(IDB database) {
+        if (database == null) {
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+
         this.database = database;
     }
 
@@ -35,7 +36,8 @@ public class CommentRepository implements ICommentRepository {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        comment.setId(generatedKeys.getInt(1));
+                        comment.setId(generatedKeys.getInt("id"));
+                        comment.setCreatedAt(generatedKeys.getString("created_at"));
                     }
                 }
             }
@@ -47,7 +49,7 @@ public class CommentRepository implements ICommentRepository {
 
     @Override
     public List<Comment> findByTaskId(int taskId) {
-        String sql = "SELECT id, name, description, deadline, created_at, task_id FROM comments WHERE task_id = ?";
+        String sql = "SELECT id, content, created_at, task_id, user_id FROM comments WHERE task_id = ?";
         List<Comment> comments = new ArrayList<>();
 
         try (Connection conn = database.getConnection();

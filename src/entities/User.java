@@ -14,14 +14,14 @@ public class User {
 
 
     public User(int id, String name, String email, String group) {
-        this.id = id;
+        setId(id);
         setName(name);
         setEmail(email);
         setGroup(group);
     }
 
 
-    public void setID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -56,10 +56,6 @@ public class User {
             throw new IllegalArgumentException("Group cannot exceed 50 characters");
         }
         this.group = group;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getGroup() { return group; }

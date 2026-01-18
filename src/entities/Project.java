@@ -23,7 +23,7 @@ public class Project {
     }
 
     public Project(int id, String name, String description, String deadline, String createdAt, int ownerId) {
-        this.id = id;
+        setId(id);
         setName(name);
         setDescription(description);
         setDeadline(deadline);

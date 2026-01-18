@@ -1,22 +1,26 @@
 package services;
 
+import data.interfaces.ICommentRepository;
 import data.interfaces.ITaskRepository;
 import data.interfaces.IUserRepository;
 import entities.Comment;
 import entities.Task;
 import entities.User;
-import exceptions.DeadlineInPastException;
 import exceptions.TaskNotFoundException;
 import exceptions.UserNotFoundException;
-import repositories.CommentRepository;
-import repositories.UserRepository;
 
 import java.util.List;
 
 public class CommentService {
-    private IUserRepository userRepository;
-    private ITaskRepository taskRepository;
-    private CommentRepository commentRepository;
+    private final IUserRepository userRepository;
+    private final ITaskRepository taskRepository;
+    private final ICommentRepository commentRepository;
+
+    public CommentService(IUserRepository userRepository, ITaskRepository taskRepository, ICommentRepository commentRepository) {
+        this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
+        this.commentRepository = commentRepository;
+    }
 
     public void createComment(Comment comment) {
         User user = userRepository.findById(comment.getUserId());

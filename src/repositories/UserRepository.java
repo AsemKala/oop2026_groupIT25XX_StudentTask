@@ -5,10 +5,7 @@ import data.interfaces.IUserRepository;
 import entities.User;
 import exceptions.DatabaseOperationException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +13,10 @@ public class UserRepository implements IUserRepository {
     private final IDB database;
 
     public UserRepository(IDB database) {
+        if (database == null) {
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+
         this.database = database;
     }
 
@@ -24,13 +25,21 @@ public class UserRepository implements IUserRepository {
         String sql = "INSERT INTO users (name, email, \"group\") VALUES (?, ?, ?)";
 
         try (Connection conn = database.getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql)) {
+             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getGroup());
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        user.setId(generatedKeys.getInt("id"));
+                    }
+                }
+            }
 
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to create user", e);
@@ -44,7 +53,7 @@ public class UserRepository implements IUserRepository {
         try (Connection conn = database.getConnection();
              PreparedStatement statement = conn.prepareStatement(sql)) {
 
-            ResultSet rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery();
             List<User> users = new ArrayList<>();
             while (rs.next()) {
                 User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("group"));
@@ -65,7 +74,7 @@ public class UserRepository implements IUserRepository {
         try (Connection conn = database.getConnection();
              PreparedStatement statement = conn.prepareStatement(sql)) {
 
-            statement.setInt(1, id); // Use setInt, not setString
+            statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {

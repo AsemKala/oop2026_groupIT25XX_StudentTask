@@ -13,6 +13,10 @@ public class ProjectRepository implements IProjectRepository {
     private final IDB database;
 
     public ProjectRepository(IDB database) {
+        if (database == null) {
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+
         this.database = database;
     }
 
@@ -33,7 +37,8 @@ public class ProjectRepository implements IProjectRepository {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        project.setId(generatedKeys.getInt(1));
+                        project.setId(generatedKeys.getInt("id"));
+                        project.setCreatedAt(generatedKeys.getString("created_at"));
                     }
                 }
             }
