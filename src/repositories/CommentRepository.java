@@ -35,7 +35,8 @@ public class CommentRepository implements ICommentRepository {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        comment.setId(generatedKeys.getInt(1));
+                        comment.setId(generatedKeys.getInt("id"));
+                        comment.setCreatedAt(generatedKeys.getString("created_at"));
                     }
                 }
             }
