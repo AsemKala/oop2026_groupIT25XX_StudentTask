@@ -33,7 +33,8 @@ public class ProjectRepository implements IProjectRepository {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        project.setId(generatedKeys.getInt(1));
+                        project.setId(generatedKeys.getInt("id"));
+                        project.setCreatedAt(generatedKeys.getString("created_at"));
                     }
                 }
             }

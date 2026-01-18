@@ -7,7 +7,7 @@ import java.time.format.ResolverStyle;
 
 public class Task {
     private int id;
-    private String taskName;
+    private String name;
     private String createdAt;
     private String finishAt;
     private int idProject;
@@ -19,7 +19,7 @@ public class Task {
     }
     public Task(int id, String name, Boolean status, String createdAt, String finishAt, int idProject, int idUser){
         setId(id);
-        setTaskName(name);
+        setName(name);
         setStatus(status);
         setCreatedAt(createdAt);
         setFinishAt(finishAt);
@@ -29,11 +29,11 @@ public class Task {
 
     public void setId(int id) { this.id = id; }
 
-    public void setTaskName(String taskName){
-        if(taskName == null || taskName.isBlank()){
+    public void setName(String name){
+        if(name == null || name.isBlank()){
             throw new IllegalArgumentException("Name cannot be blank");
         }
-        this.taskName = taskName;
+        this.name = name;
     }
     
     public void setStatus(Boolean status){
@@ -78,12 +78,16 @@ public class Task {
         this.idUser = idUser;
     }
 
-    public String getName() { return this.taskName; }
+    public String getName() { return this.name; }
     public int getId() { return this.id; }
     public Boolean getStatus() { return  this.status; }
+    public String getCreatedAt() {return createdAt; }
+    public String getFinishAt() { return finishAt; }
+    public int getIdProject() { return idProject; }
+    public int getIdUser() { return idUser; }
 
     public String toString(){
-        return "Id: " + id + "\ntaskName: " + taskName;
+        return "Id: " + id + "\nname: " + name;
     }
 
     private boolean isValidDate(String dateStr) {

@@ -1,52 +1,67 @@
 package repositories;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import data.interfaces.IDB;
 import data.interfaces.ITaskRepository;
 import entities.Task;
-import exceptions.TaskNotFoundException;
+import exceptions.DatabaseOperationException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 
 public class TaskRepository implements ITaskRepository {
-    private IDB database;
+    private final IDB database;
 
     public TaskRepository(IDB database) {
         this.database = database;
     }
 
     @Override
-    public Task add(String name, String finish_at, int id_project, int user_id) {
+    public void create(Task task) {
+        String sql = "INSERT INTO tasks (name, finish_at, id_project, id_user) VALUES (?,?,?,?)";
 
-        try (Connection conn = database.getConnection()) {
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM tasks");
-            while (resultSet.next()) {
-                if (!resultSet.getString(name).isEmpty()) {
-                    throw new DuplicateRequestException("This task already exists");
-                } else {
-                    int row = statement.executeUpdate("insert Tasks(name, finish_at, id_project, id_user) VALUES (?,?,?,?)");
-                    System.out.println("Task was added");
+        try (Connection conn = database.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setString(1, task.getName());
+            statement.setString(2, task.getFinishAt());
+            statement.setInt(3, task.getIdProject());
+            statement.setInt(4, task.getIdUser());
+
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        task.setId(generatedKeys.getInt("id"));
+                        task.setStatus(generatedKeys.getBoolean("status"));
+                        task.setCreatedAt(generatedKeys.getString("created_at"));
+                    }
                 }
             }
-            return null;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error 505");
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to create task: " + e.getMessage(), e);
         }
     }
     @Override
-    public Task changeStatus(int id, boolean status) {
-        try (Connection conn = database.getConnection()) {
-            Statement statement = conn.createStatement();
-            int rows = statement.executeUpdate("Update Tasks SET status = status where id = id");
-            System.out.println("Status was changed");
-            return null;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error");
+    public void changeStatus(Task task) {
+        String sql = "UPDATE tasks SET status = ? WHERE id = ?";
+
+        try (Connection conn = database.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            boolean newStatus = !task.getStatus();
+            statement.setBoolean(1, newStatus);
+            statement.setInt(2, task.getId());
+
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows > 0) {
+                task.setStatus(newStatus);
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to change task status: " + e.getMessage(), e);
         }
 
     }
@@ -57,23 +72,27 @@ public class TaskRepository implements ITaskRepository {
 
         try (Connection conn = database.getConnection();
              PreparedStatement statement = conn.prepareStatement(sql)) {
+
             statement.setInt(1, id);
-            ResultSet res = statement.executeQuery();
-            if (res.next()) {
-                int idTask = res.getInt("id");
-                String taskName = res.getString("name");
-                String finish_at = res.getString("finish_at");
-                String created_at = res.getString("created_at");
-                int idProject = res.getInt("id_project");
-                int idUser = res.getInt("id_user");
-                boolean status = res.getBoolean("status");
-                return new Task(idTask, taskName, status, created_at, finish_at, idProject, idUser);
+
+            try (ResultSet res = statement.executeQuery()) {
+                if (res.next()) {
+                    int idTask = res.getInt("id");
+                    String taskName = res.getString("name");
+                    String finish_at = res.getString("finish_at");
+                    String created_at = res.getString("created_at");
+                    int idProject = res.getInt("id_project");
+                    int idUser = res.getInt("id_user");
+                    boolean status = res.getBoolean("status");
+                    return new Task(idTask, taskName, status, created_at, finish_at, idProject, idUser);
+                }
             }
 
             return null;
+
         }
-        catch (Exception e) {
-            throw new TaskNotFoundException("Task Not Found");
+        catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to find task by ID: " + e.getMessage(), e);
         }
     }
 }
