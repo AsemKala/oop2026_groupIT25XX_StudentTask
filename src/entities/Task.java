@@ -17,6 +17,7 @@ public class Task {
     public Task(){
         this.id = 0;
     }
+
     public Task(int id, String name, Boolean status, String createdAt, String finishAt, int idProject, int idUser){
         setId(id);
         setName(name);
