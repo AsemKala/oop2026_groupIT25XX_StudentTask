@@ -61,10 +61,8 @@ public class ProjectService {
         return projectRepository.findByOwnerId(ownerId);
     }
 
-    private boolean isDeadlineInPast(String deadlineStr) {
+    private boolean isDeadlineInPast(LocalDate deadline) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-            LocalDate deadline = LocalDate.parse(deadlineStr, formatter);
             LocalDate today = LocalDate.now();
             return deadline.isBefore(today);
         } catch (Exception e) {
