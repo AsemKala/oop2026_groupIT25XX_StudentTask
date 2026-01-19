@@ -29,7 +29,7 @@ public class ProjectRepository implements IProjectRepository {
 
             statement.setString(1, project.getName());
             statement.setString(2, project.getDescription());
-            statement.setString(3, project.getDeadline());
+            statement.setDate(3, java.sql.Date.valueOf(project.getDeadline()));
             statement.setInt(4, project.getOwnerId());
 
             int affectedRows = statement.executeUpdate();
@@ -38,7 +38,7 @@ public class ProjectRepository implements IProjectRepository {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         project.setId(generatedKeys.getInt("id"));
-                        project.setCreatedAt(generatedKeys.getString("created_at"));
+                        project.setCreatedAt(generatedKeys.getDate("created_at").toLocalDate());
                     }
                 }
             }
@@ -62,8 +62,8 @@ public class ProjectRepository implements IProjectRepository {
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("description"),
-                        rs.getString("deadline"),
-                        rs.getString("created_at"),
+                        rs.getDate("deadline").toLocalDate(),
+                        rs.getDate("created_at").toLocalDate(),
                         rs.getInt("owner_id")
                 );
                 projects.add(project);
@@ -91,8 +91,8 @@ public class ProjectRepository implements IProjectRepository {
                             rs.getInt("id"),
                             rs.getString("name"),
                             rs.getString("description"),
-                            rs.getString("deadline"),
-                            rs.getString("created_at"),
+                            rs.getDate("deadline").toLocalDate(),
+                            rs.getDate("created_at").toLocalDate(),
                             rs.getInt("owner_id")
                     );
                 }
@@ -121,8 +121,8 @@ public class ProjectRepository implements IProjectRepository {
                             rs.getInt("id"),
                             rs.getString("name"),
                             rs.getString("description"),
-                            rs.getString("deadline"),
-                            rs.getString("created_at"),
+                            rs.getDate("deadline").toLocalDate(),
+                            rs.getDate("created_at").toLocalDate(),
                             rs.getInt("owner_id")
                     );
                     projects.add(project);

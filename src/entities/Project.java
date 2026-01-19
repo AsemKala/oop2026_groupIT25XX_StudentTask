@@ -9,11 +9,11 @@ public class Project {
     private int id;
     private String name;
     private String description;
-    private String deadline;
-    private String createdAt;
+    private LocalDate deadline;
+    private LocalDate createdAt;
     private int ownerId;
 
-    public Project(String name, String description, String deadline, int ownerId) {
+    public Project(String name, String description, LocalDate deadline, int ownerId) {
         this.id = 0;
         setName(name);
         setDescription(description);
@@ -22,7 +22,7 @@ public class Project {
         setOwnerId(ownerId);
     }
 
-    public Project(int id, String name, String description, String deadline, String createdAt, int ownerId) {
+    public Project(int id, String name, String description, LocalDate deadline, LocalDate createdAt, int ownerId) {
         setId(id);
         setName(name);
         setDescription(description);
@@ -57,25 +57,12 @@ public class Project {
         }
     }
 
-    public void setDeadline(String deadline) {
-        if (deadline == null || deadline.isBlank()) {
-            throw new IllegalArgumentException("Deadline must be specified");
-        }
-        if (!isValidDate(deadline)) {
-            throw new IllegalArgumentException("Invalid date format. Use MM/dd/yyyy");
-        }
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
-    public void setCreatedAt(String createdAt) {
-        if (createdAt != null && !createdAt.isBlank()) {
-            if (!isValidDate(createdAt)) {
-                throw new IllegalArgumentException("Invalid creation date format. Use MM/dd/yyyy");
-            }
-            this.createdAt = createdAt;
-        } else {
-            this.createdAt = createdAt;
-        }
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setOwnerId(int ownerId) {
@@ -85,12 +72,11 @@ public class Project {
         this.ownerId = ownerId;
     }
 
-    // Getters
     public int getId() { return id; }
     public String getName() { return name; }
     public String getDescription() { return description; }
-    public String getDeadline() { return deadline; }
-    public String getCreatedAt() { return createdAt; }
+    public LocalDate getDeadline() { return deadline; }
+    public LocalDate getCreatedAt() { return createdAt; }
     public int getOwnerId() { return ownerId; }
 
     @Override
@@ -103,16 +89,5 @@ public class Project {
                 ", createdAt='" + createdAt + '\'' +
                 ", ownerId=" + ownerId +
                 '}';
-    }
-
-    private boolean isValidDate(String dateStr) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-                    .withResolverStyle(ResolverStyle.STRICT);
-            LocalDate.parse(dateStr, formatter);
-            return true;
-        } catch (DateTimeParseException e) {
-            return false;
-        }
     }
 }
