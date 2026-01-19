@@ -37,7 +37,7 @@ public class CommentRepository implements ICommentRepository {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         comment.setId(generatedKeys.getInt("id"));
-                        comment.setCreatedAt(generatedKeys.getString("created_at"));
+                        comment.setCreatedAt(generatedKeys.getDate("created_at").toLocalDate());
                     }
                 }
             }
@@ -62,7 +62,7 @@ public class CommentRepository implements ICommentRepository {
                     Comment comment = new Comment(
                             rs.getInt("id"),
                             rs.getString("content"),
-                            rs.getString("created_at"),
+                            rs.getDate("created_at").toLocalDate(),
                             rs.getInt("task_id"),
                             rs.getInt("user_id")
                     );

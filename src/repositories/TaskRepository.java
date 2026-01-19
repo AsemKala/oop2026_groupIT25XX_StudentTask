@@ -29,7 +29,7 @@ public class TaskRepository implements ITaskRepository {
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, task.getName());
-            statement.setString(2, task.getFinishAt());
+            statement.setDate(2, java.sql.Date.valueOf(task.getFinishAt()));
             statement.setInt(3, task.getIdProject());
             statement.setInt(4, task.getIdUser());
 
@@ -40,7 +40,7 @@ public class TaskRepository implements ITaskRepository {
                     if (generatedKeys.next()) {
                         task.setId(generatedKeys.getInt("id"));
                         task.setStatus(generatedKeys.getBoolean("status"));
-                        task.setCreatedAt(generatedKeys.getString("created_at"));
+                        task.setCreatedAt(generatedKeys.getDate("created_at").toLocalDate());
                     }
                 }
             }
@@ -87,8 +87,8 @@ public class TaskRepository implements ITaskRepository {
                 if (res.next()) {
                     int idTask = res.getInt("id");
                     String taskName = res.getString("name");
-                    String finish_at = res.getString("finish_at");
-                    String created_at = res.getString("created_at");
+                    LocalDate finish_at = res.getDate("finish_at").toLocalDate();
+                    LocalDate created_at = res.getDate("created_at").toLocalDate();
                     int idProject = res.getInt("id_project");
                     int idUser = res.getInt("id_user");
                     boolean status = res.getBoolean("status");
@@ -115,9 +115,7 @@ public class TaskRepository implements ITaskRepository {
             int affected_rows = statement.executeUpdate();
 
             if (affected_rows > 0) {
-                task.setFinishAt(LocalDate.now().format(
-                        DateTimeFormatter.ofPattern("MM/dd/yyyy")
-                ));
+                task.setFinishAt(LocalDate.now());
             }
 
         } catch (SQLException e) {

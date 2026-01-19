@@ -8,8 +8,8 @@ import java.time.format.ResolverStyle;
 public class Task {
     private int id;
     private String name;
-    private String createdAt;
-    private String finishAt;
+    private LocalDate createdAt;
+    private LocalDate finishAt;
     private int idProject;
     private int idUser;
     private Boolean status;
@@ -18,7 +18,7 @@ public class Task {
         this.id = 0;
     }
 
-    public Task(int id, String name, Boolean status, String createdAt, String finishAt, int idProject, int idUser){
+    public Task(int id, String name, Boolean status, LocalDate createdAt, LocalDate finishAt, int idProject, int idUser){
         setId(id);
         setName(name);
         setStatus(status);
@@ -41,26 +41,12 @@ public class Task {
         this.status = status;
     }
 
-    public void setCreatedAt(String createdAt) {
-        if (createdAt != null && !createdAt.isBlank()) {
-            if (!isValidDate(createdAt)) {
-                throw new IllegalArgumentException("Invalid creation date format. Use MM/dd/yyyy");
-            }
-            this.createdAt = createdAt;
-        } else {
-            this.createdAt = createdAt;
-        }
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setFinishAt(String finishAt) {
-        if (finishAt != null && !finishAt.isBlank()) {
-            if (!isValidDate(finishAt)) {
-                throw new IllegalArgumentException("Invalid creation date format. Use MM/dd/yyyy");
-            }
-            this.finishAt = finishAt;
-        } else {
-            this.finishAt = finishAt;
-        }
+    public void setFinishAt(LocalDate finishAt) {
+        this.finishAt = finishAt;
     }
 
     public void setIdProject(int idProject) {
@@ -82,8 +68,8 @@ public class Task {
     public String getName() { return this.name; }
     public int getId() { return this.id; }
     public Boolean getStatus() { return  this.status; }
-    public String getCreatedAt() {return createdAt; }
-    public String getFinishAt() { return finishAt; }
+    public LocalDate getCreatedAt() {return createdAt; }
+    public LocalDate getFinishAt() { return finishAt; }
     public int getIdProject() { return idProject; }
     public int getIdUser() { return idUser; }
 

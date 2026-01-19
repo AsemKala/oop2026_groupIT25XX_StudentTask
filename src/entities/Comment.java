@@ -8,7 +8,7 @@ import java.time.format.ResolverStyle;
 public class Comment {
     private int id;
     private String content;
-    private String createdAt;
+    private LocalDate createdAt;
     private int taskId;
     private int userId;
 
@@ -24,7 +24,7 @@ public class Comment {
         setUserId(userId);
     }
 
-    public Comment(int id, String content, String createdAt, int taskId, int userId) {
+    public Comment(int id, String content, LocalDate createdAt, int taskId, int userId) {
         setId(id);
         setContent(content);
         setCreatedAt(createdAt);
@@ -43,15 +43,8 @@ public class Comment {
         this.content = content;
     }
 
-    public void setCreatedAt(String createdAt) {
-        if (createdAt != null && !createdAt.isBlank()) {
-            if (!isValidDate(createdAt)) {
-                throw new IllegalArgumentException("Invalid creation date format. Use MM/dd/yyyy");
-            }
-            this.createdAt = createdAt;
-        } else {
-            this.createdAt = createdAt;
-        }
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setTaskId(int taskId) {
@@ -72,7 +65,7 @@ public class Comment {
     public String getContent() { return content; }
     public int getTaskId() { return taskId; }
     public int getUserId() { return userId; }
-    public String getCreatedAt() { return createdAt; }
+    public LocalDate getCreatedAt() { return createdAt; }
 
     @Override
     public String toString() {
