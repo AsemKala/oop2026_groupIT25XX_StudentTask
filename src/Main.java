@@ -1,13 +1,17 @@
 import data.interfaces.IDB;
 import data.interfaces.IProjectRepository;
+import data.interfaces.ITaskRepository;
 import data.interfaces.IUserRepository;
 import entities.Project;
+import entities.Task;
 import entities.User;
 import exceptions.DuplicateEmailException;
 import repositories.ProjectRepository;
 import repositories.SuperbaseDB;
+import repositories.TaskRepository;
 import repositories.UserRepository;
 import services.ProjectService;
+import services.TaskService;
 import services.UserService;
 
 import java.time.LocalDate;
@@ -28,6 +32,9 @@ public class Main {
         IProjectRepository projectRepo = new ProjectRepository(database);
         ProjectService projectService = new ProjectService(projectRepo, userRepo);
 
+        ITaskRepository taskRepo = new TaskRepository(database);
+        TaskService taskService = new TaskService(taskRepo, userRepo, projectRepo);
+
         try {
 //            User user = new User();
 //            user.setName("Zangar");
@@ -35,16 +42,26 @@ public class Main {
 //            user.setGroup("IT-2508");
 //            userService.creteUser(user);
 //            System.out.println("Created successfully!");
+//
+//            Project testProject = new Project("Music App",
+//                                            "App for listening and loading music",
+//                                            LocalDate.parse("12/12/2026", formatter),
+//                                            1);
+//            projectService.createProject(testProject);
+//            System.out.println("Created successfully!");
+//            System.out.println(projectService.getProjectById(testProject.getId()));
+//            System.out.println(projectService.getAllProjects());
+//            System.out.println(projectService.getProjectsByOwner(testProject.getOwnerId()));
 
-            Project testProject = new Project("Music App",
-                                            "App for listening and loading music",
-                                            LocalDate.parse("12/12/2026", formatter),
-                                            1);
-            projectService.createProject(testProject);
-            System.out.println("Created successfully!");
-            System.out.println(projectService.getProjectById(testProject.getId()));
-            System.out.println(projectService.getAllProjects());
-            System.out.println(projectService.getProjectsByOwner(testProject.getOwnerId()));
+
+
+            Task testTask = new Task(1, "assignment1", false, LocalDate.now(), LocalDate.parse("12/12/2026", formatter), 1, 1 );
+
+
+            taskService.createTask(testTask);
+            System.out.print("Created succesfully");
+            System.out.print(taskService.toString());
+
 
         } catch (DuplicateEmailException e) {
             System.out.println("Failed to create user: " + e.getMessage());
