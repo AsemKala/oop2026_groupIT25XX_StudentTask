@@ -77,14 +77,4 @@ public class Task {
         return "Id: " + id + "\nname: " + name;
     }
 
-    private boolean isValidDate(String dateStr) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-                    .withResolverStyle(ResolverStyle.STRICT);
-            LocalDate.parse(dateStr, formatter);
-            return true;
-        } catch (DateTimeParseException e) {
-            return false;
-        }
-    }
 }
