@@ -8,6 +8,8 @@ import exceptions.DatabaseOperationException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class TaskRepository implements ITaskRepository {
@@ -101,6 +103,35 @@ public class TaskRepository implements ITaskRepository {
         }
         catch (SQLException e) {
             throw new DatabaseOperationException("Failed to find task by ID: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Task> findAll() {
+        String sql = "SELECT id, content, created_at, task_id, user_id FROM tasks";
+        List<Task> tasks = new ArrayList<>();
+
+        try (Connection conn = database.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                Task task = new Task(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getBoolean("status"),
+                        rs.getString("created_at"),
+                        rs.getString("finish_at"),
+                        rs.getInt("id_project"),
+                        rs.getInt("id_user")
+                );
+                tasks.add(task);
+            }
+
+            return tasks;
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to get all tasks: " + e.getMessage(), e);
         }
     }
 

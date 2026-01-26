@@ -3,6 +3,7 @@ package repositories;
 import data.interfaces.ICommentRepository;
 import data.interfaces.IDB;
 import entities.Comment;
+import entities.Project;
 import exceptions.DatabaseOperationException;
 
 import java.sql.*;
@@ -48,6 +49,34 @@ public class CommentRepository implements ICommentRepository {
     }
 
     @Override
+    public Comment findById(int id) {
+        String sql = "SELECT id, content, created_at, task_id, user_id FROM comments WHERE id = ?";
+
+        try (Connection conn = database.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return new Comment(
+                            rs.getInt("id"),
+                            rs.getString("content"),
+                            rs.getString("created_at"),
+                            rs.getInt("task_id"),
+                            rs.getInt("user_id")
+                    );
+                }
+            }
+
+            return null;
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to find comment by ID: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public List<Comment> findByTaskId(int taskId) {
         String sql = "SELECT id, content, created_at, task_id, user_id FROM comments WHERE task_id = ?";
         List<Comment> comments = new ArrayList<>();
@@ -74,6 +103,33 @@ public class CommentRepository implements ICommentRepository {
 
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to find comments by task: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Comment> findAll() {
+        String sql = "SELECT id, content, created_at, task_id, user_id FROM comments";
+        List<Comment> comments = new ArrayList<>();
+
+        try (Connection conn = database.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                Comment comment = new Comment(
+                        rs.getInt("id"),
+                        rs.getString("content"),
+                        rs.getString("created_at"),
+                        rs.getInt("task_id"),
+                        rs.getInt("user_id")
+                );
+                comments.add(comment);
+            }
+
+            return comments;
+
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Failed to get all comments: " + e.getMessage(), e);
         }
     }
 }

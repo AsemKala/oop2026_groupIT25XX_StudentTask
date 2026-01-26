@@ -2,9 +2,6 @@ package data.interfaces;
 
 import entities.Task;
 
-public interface ITaskRepository {
-    Task findById(int id);
-    void create(Task task);
+public interface ITaskRepository extends IRepository<Task> {
     void changeStatus(Task task);
-
 }
