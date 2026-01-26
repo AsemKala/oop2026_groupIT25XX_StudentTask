@@ -120,8 +120,8 @@ public class TaskRepository implements ITaskRepository {
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getBoolean("status"),
-                        rs.getString("created_at"),
-                        rs.getString("finish_at"),
+                        rs.getDate("created_at").toLocalDate(),
+                        rs.getDate("finish_at").toLocalDate(),
                         rs.getInt("id_project"),
                         rs.getInt("id_user")
                 );
