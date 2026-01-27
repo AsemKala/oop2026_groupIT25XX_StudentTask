@@ -5,8 +5,10 @@ import data.interfaces.IUserRepository;
 import entities.Project;
 import entities.User;
 import exceptions.*;
+import utils.EntityFilter;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 public class ProjectService {
@@ -67,5 +69,16 @@ public class ProjectService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public List<Project> getOverdueProjects() {
+        List<Project> allProjects = getAllProjects();
+        return EntityFilter.filter(allProjects, project -> project.getDeadline()
+                .isBefore(LocalDate.now()));
+    }
+
+    public List<Project> getProjectsSortedByDeadline() {
+        List<Project> allProjects = getAllProjects();
+        return EntityFilter.sort(allProjects, Comparator.comparing(Project::getDeadline));
     }
 }

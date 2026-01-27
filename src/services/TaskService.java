@@ -11,6 +11,8 @@ import exceptions.TaskAlreadyCompletedException;
 import exceptions.TaskNotFoundException;
 import exceptions.UserNotFoundException;
 
+import java.util.List;
+
 public class TaskService {
     private final ITaskRepository taskRepository;
     private final IUserRepository userRepository;
@@ -52,5 +54,9 @@ public class TaskService {
         }
 
         taskRepository.changeStatus(task);
+    }
+
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
     }
 }
