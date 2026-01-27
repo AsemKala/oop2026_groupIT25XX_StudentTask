@@ -13,10 +13,10 @@ import java.util.List;
 
 public class CommentService {
     private final IUserRepository userRepository;
-    private final ITaskRepository taskRepository;
+    private final ITaskRepository<Task> taskRepository;
     private final ICommentRepository commentRepository;
 
-    public CommentService(IUserRepository userRepository, ITaskRepository taskRepository, ICommentRepository commentRepository) {
+    public CommentService(IUserRepository userRepository, ITaskRepository<Task> taskRepository, ICommentRepository commentRepository) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.commentRepository = commentRepository;

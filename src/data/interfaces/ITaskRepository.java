@@ -2,9 +2,12 @@ package data.interfaces;
 
 import entities.Task;
 
-public interface ITaskRepository {
-    Task findById(int id);
-    void create(Task task);
-    void changeStatus(Task task);
+import java.util.List;
+
+public interface ITaskRepository<T> {
+    T findById(int id);
+    void create(T task);
+    void changeStatus(T task);
+    List<T> getAll();
 
 }

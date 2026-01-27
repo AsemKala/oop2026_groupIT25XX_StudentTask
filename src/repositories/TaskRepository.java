@@ -7,11 +7,13 @@ import exceptions.DatabaseOperationException;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class TaskRepository implements ITaskRepository {
+public class TaskRepository implements ITaskRepository<Task> {
     private final IDB database;
+    private List<Task> tasks= new ArrayList<>();
 
     public TaskRepository(IDB database) {
         if (database == null) {
@@ -74,7 +76,6 @@ public class TaskRepository implements ITaskRepository {
 
     }
 
-    @Override
     public Task findById(int id) {
         String sql = "SELECT * from tasks WHERE id = ?";
 
@@ -102,6 +103,9 @@ public class TaskRepository implements ITaskRepository {
         catch (SQLException e) {
             throw new DatabaseOperationException("Failed to find task by ID: " + e.getMessage(), e);
         }
+    }
+    public List<Task> getAll(){
+        return tasks;
     }
 
     private void finish(Task task) {
