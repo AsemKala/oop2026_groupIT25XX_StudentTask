@@ -82,7 +82,6 @@ public class TaskRepository implements ITaskRepository {
         }
     }
 
-    @Override
     public Task findById(int id) {
         String sql = "SELECT * from tasks WHERE id = ?";
         Connection conn = null;
@@ -155,6 +154,9 @@ public class TaskRepository implements ITaskRepository {
                 databasePool.releaseConnection(conn);
             }
         }
+    }
+    public List<Task> getAll(){
+        return tasks;
     }
 
     private void finish(Task task) {
