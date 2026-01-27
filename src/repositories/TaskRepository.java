@@ -155,9 +155,6 @@ public class TaskRepository implements ITaskRepository {
             }
         }
     }
-//    public List<Task> getAll(){
-//        return tasks;
-//    }
 
     private void finish(Task task) {
         String sql = "UPDATE tasks SET finish_at = CURRENT_DATE WHERE id = ?";

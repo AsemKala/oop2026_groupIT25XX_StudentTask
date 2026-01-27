@@ -44,4 +44,8 @@ public class CommentService {
 
         return commentRepository.findByTaskId(taskId);
     }
+
+    public List<Comment> getAllComments() {
+        return commentRepository.findAll();
+    }
 }
