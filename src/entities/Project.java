@@ -15,62 +15,37 @@ public class Project {
 
     public Project(String name, String description, LocalDate deadline, int ownerId) {
         this.id = 0;
-        setName(name);
-        setDescription(description);
-        setDeadline(deadline);
+        this.name = name;
+        this.description = description;
+        this.deadline =deadline;
         this.createdAt = null;
-        setOwnerId(ownerId);
+        this.ownerId = ownerId;
     }
 
     public Project(int id, String name, String description, LocalDate deadline, LocalDate createdAt, int ownerId) {
         setId(id);
-        setName(name);
-        setDescription(description);
-        setDeadline(deadline);
+        this.name = name;
+        this.description = description;
+        this.deadline =deadline;
         setCreatedAt(createdAt);
-        setOwnerId(ownerId);
+        this.ownerId = ownerId;
     }
 
     public Project() {
-        this.id = 0;
+        setId(id);
+        setCreatedAt(createdAt);
     }
+
 
     public void setId(int id) {
         this.id = id;
     }
-
-    public void setName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Name cannot be blank");
-        }
-        if (name.length() > 50) {
-            throw new IllegalArgumentException("Name cannot exceed 50 characters");
-        }
-        this.name = name.trim();
-    }
-
-    public void setDescription(String description) {
-        if (description != null) {
-            this.description = description.trim();
-        } else {
-            this.description = null;
-        }
-    }
-
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
-
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
-    public void setOwnerId(int ownerId) {
-        if (ownerId <= 0) {
-            throw new IllegalArgumentException("Owner ID must be positive");
-        }
-        this.ownerId = ownerId;
-    }
+
+
 
     public int getId() { return id; }
     public String getName() { return name; }

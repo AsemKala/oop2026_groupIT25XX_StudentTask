@@ -18,6 +18,13 @@ public class Task {
         this.id = 0;
     }
 
+    public Task(String name, Boolean status, LocalDate finishAt){
+        setId(id);
+        setName(name);
+        setStatus(status);
+        setCreatedAt(createdAt);
+        setFinishAt(finishAt);
+    }
     public Task(int id, String name, Boolean status, LocalDate createdAt, LocalDate finishAt, int idProject, int idUser){
         setId(id);
         setName(name);
