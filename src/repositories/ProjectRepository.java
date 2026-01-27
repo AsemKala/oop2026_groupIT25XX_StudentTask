@@ -1,6 +1,6 @@
 package repositories;
 
-import data.interfaces.IDB;
+import data.interfaces.IDBPool;
 import data.interfaces.IProjectRepository;
 import entities.Project;
 import exceptions.DatabaseOperationException;
@@ -10,22 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectRepository implements IProjectRepository {
-    private final IDB database;
-
-    public ProjectRepository(IDB database) {
-        if (database == null) {
-            throw new IllegalArgumentException("Database cannot be null");
-        }
-
-        this.database = database;
-    }
+    private final IDBPool databasePool = SuperbaseDB.getInstance();
 
     @Override
     public void create(Project project) {
         String sql = "INSERT INTO projects (name, description, deadline, owner_id) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
 
-        try (Connection conn = database.getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try {
+            conn = databasePool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, project.getName());
             statement.setString(2, project.getDescription());
@@ -43,8 +37,14 @@ public class ProjectRepository implements IProjectRepository {
                 }
             }
 
+            statement.close();
+
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to create project: " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                databasePool.releaseConnection(conn);
+            }
         }
     }
 
@@ -52,10 +52,12 @@ public class ProjectRepository implements IProjectRepository {
     public List<Project> findAll() {
         String sql = "SELECT id, name, description, deadline, created_at, owner_id FROM projects";
         List<Project> projects = new ArrayList<>();
+        Connection conn = null;
 
-        try (Connection conn = database.getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql);
-             ResultSet rs = statement.executeQuery()) {
+        try {
+            conn = databasePool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
                 Project project = new Project(
@@ -69,19 +71,27 @@ public class ProjectRepository implements IProjectRepository {
                 projects.add(project);
             }
 
+            statement.close();
+
             return projects;
 
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to get all projects: " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                databasePool.releaseConnection(conn);
+            }
         }
     }
 
     @Override
     public Project findById(int id) {
         String sql = "SELECT id, name, description, deadline, created_at, owner_id FROM projects WHERE id = ?";
+        Connection conn = null;
 
-        try (Connection conn = database.getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql)) {
+        try {
+            conn = databasePool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql);
 
             statement.setInt(1, id);
 
@@ -98,10 +108,16 @@ public class ProjectRepository implements IProjectRepository {
                 }
             }
 
+            statement.close();
+
             return null;
 
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to find project by ID: " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                databasePool.releaseConnection(conn);
+            }
         }
     }
 
@@ -109,9 +125,11 @@ public class ProjectRepository implements IProjectRepository {
     public List<Project> findByOwnerId(int ownerId) {
         String sql = "SELECT id, name, description, deadline, created_at, owner_id FROM projects WHERE owner_id = ?";
         List<Project> projects = new ArrayList<>();
+        Connection conn = null;
 
-        try (Connection conn = database.getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql)) {
+        try {
+            conn = databasePool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql);
 
             statement.setInt(1, ownerId);
 
@@ -129,10 +147,16 @@ public class ProjectRepository implements IProjectRepository {
                 }
             }
 
+            statement.close();
+
             return projects;
 
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to find projects by owner: " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                databasePool.releaseConnection(conn);
+            }
         }
     }
 }

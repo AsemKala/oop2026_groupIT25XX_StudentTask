@@ -1,34 +1,27 @@
 package repositories;
 
-import data.interfaces.IDB;
+import data.interfaces.IDBPool;
 import data.interfaces.ITaskRepository;
 import entities.Task;
 import exceptions.DatabaseOperationException;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class TaskRepository implements ITaskRepository {
-    private final IDB database;
-
-    public TaskRepository(IDB database) {
-        if (database == null) {
-            throw new IllegalArgumentException("Database cannot be null");
-        }
-
-        this.database = database;
-    }
+    private final IDBPool databasePool = SuperbaseDB.getInstance();
 
     @Override
     public void create(Task task) {
         String sql = "INSERT INTO tasks (name, finish_at, id_project, id_user) VALUES (?,?,?,?)";
+        Connection conn = null;
 
-        try (Connection conn = database.getConnection();
-            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try {
+            conn = databasePool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, task.getName());
             statement.setDate(2, java.sql.Date.valueOf(task.getFinishAt()));
@@ -47,16 +40,24 @@ public class TaskRepository implements ITaskRepository {
                 }
             }
 
+            statement.close();
+
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to create task: " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                databasePool.releaseConnection(conn);
+            }
         }
     }
     @Override
     public void changeStatus(Task task) {
         String sql = "UPDATE tasks SET status = ? WHERE id = ?";
+        Connection conn = null;
 
-        try (Connection conn = database.getConnection();
-            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try {
+            conn = databasePool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             boolean newStatus = !task.getStatus();
             statement.setBoolean(1, newStatus);
@@ -70,18 +71,25 @@ public class TaskRepository implements ITaskRepository {
 
             finish(task);
 
+            statement.close();
+
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to change task status: " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                databasePool.releaseConnection(conn);
+            }
         }
-
     }
 
     @Override
     public Task findById(int id) {
         String sql = "SELECT * from tasks WHERE id = ?";
+        Connection conn = null;
 
-        try (Connection conn = database.getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql)) {
+        try {
+            conn = databasePool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql);
 
             statement.setInt(1, id);
 
@@ -98,11 +106,17 @@ public class TaskRepository implements ITaskRepository {
                 }
             }
 
+            statement.close();
+
             return null;
 
         }
         catch (SQLException e) {
             throw new DatabaseOperationException("Failed to find task by ID: " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                databasePool.releaseConnection(conn);
+            }
         }
     }
 
@@ -110,10 +124,12 @@ public class TaskRepository implements ITaskRepository {
     public List<Task> findAll() {
         String sql = "SELECT id, content, created_at, task_id, user_id FROM tasks";
         List<Task> tasks = new ArrayList<>();
+        Connection conn = null;
 
-        try (Connection conn = database.getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql);
-             ResultSet rs = statement.executeQuery()) {
+        try {
+            conn = databasePool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
                 Task task = new Task(
@@ -128,18 +144,26 @@ public class TaskRepository implements ITaskRepository {
                 tasks.add(task);
             }
 
+            statement.close();
+
             return tasks;
 
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to get all tasks: " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                databasePool.releaseConnection(conn);
+            }
         }
     }
 
     private void finish(Task task) {
         String sql = "UPDATE tasks SET finish_at = CURRENT_DATE WHERE id = ?";
+        Connection conn = null;
 
-        try (Connection conn = database.getConnection();
-            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try {
+            conn = databasePool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setInt(1, task.getId());
 
@@ -149,8 +173,14 @@ public class TaskRepository implements ITaskRepository {
                 task.setFinishAt(LocalDate.now());
             }
 
+            statement.close();
+
         } catch (SQLException e) {
             throw new DatabaseOperationException("Failed to update finished date: " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                databasePool.releaseConnection(conn);
+            }
         }
     }
 }
