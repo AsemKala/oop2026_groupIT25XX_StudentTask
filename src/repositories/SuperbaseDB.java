@@ -20,9 +20,9 @@ public class SuperbaseDB implements IDBPool {
     private final String password;
 
     private SuperbaseDB() {
-        this.url = System.getenv("DB_URL");
-        this.user = System.getenv("DB_USER");
-        this.password = System.getenv("DB_PASSWORD");
+        this.url = "jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require";
+        this.user = "postgres.jrosmhhjxqglqwbovgle";
+        this.password = "Q2Fnxn3X1Oy2Gied";
 
         availableConnections = new ArrayList<>(INITIAL_POOL_SIZE);
         usedConnections = new ArrayList<>();
