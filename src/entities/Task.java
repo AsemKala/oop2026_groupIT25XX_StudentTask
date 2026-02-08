@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
-public class Task {
+public abstract class Task {
     private int id;
     private String name;
     private LocalDate createdAt;
@@ -71,6 +71,8 @@ public class Task {
         
         this.idUser = idUser;
     }
+
+    public abstract String getType();
 
     public String getName() { return this.name; }
     public int getId() { return this.id; }

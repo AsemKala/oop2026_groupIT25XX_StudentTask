@@ -4,6 +4,7 @@ import data.interfaces.IDBPool;
 import data.interfaces.ITaskRepository;
 import entities.Task;
 import exceptions.DatabaseOperationException;
+import services.TaskFactory;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -12,11 +13,16 @@ import java.util.List;
 
 
 public class TaskRepository implements ITaskRepository {
-    private final IDBPool databasePool = SuperbaseDB.getInstance();
+
+    private final IDBPool databasePool;
+
+    public TaskRepository(IDBPool pool) {
+        this.databasePool = pool;
+    }
 
     @Override
     public void create(Task task) {
-        String sql = "INSERT INTO tasks (name, finish_at, id_project, id_user) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO tasks (name, type, finish_at, id_project, id_user) VALUES (?,?,?,?,?)";
         Connection conn = null;
 
         try {
@@ -24,9 +30,10 @@ public class TaskRepository implements ITaskRepository {
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, task.getName());
-            statement.setDate(2, java.sql.Date.valueOf(task.getFinishAt()));
-            statement.setInt(3, task.getIdProject());
-            statement.setInt(4, task.getIdUser());
+            statement.setString(2, task.getType());  // Added type
+            statement.setDate(3, java.sql.Date.valueOf(task.getFinishAt()));
+            statement.setInt(4, task.getIdProject());
+            statement.setInt(5, task.getIdUser());
 
             int affectedRows = statement.executeUpdate();
 
@@ -50,6 +57,7 @@ public class TaskRepository implements ITaskRepository {
             }
         }
     }
+
     @Override
     public void changeStatus(Task task) {
         String sql = "UPDATE tasks SET status = ? WHERE id = ?";
@@ -101,7 +109,8 @@ public class TaskRepository implements ITaskRepository {
                     int idProject = res.getInt("id_project");
                     int idUser = res.getInt("id_user");
                     boolean status = res.getBoolean("status");
-                    return new Task(idTask, taskName, status, created_at, finish_at, idProject, idUser);
+                    String type = res.getString("type");
+                    return TaskFactory.createTask(type, idTask, taskName, status, created_at, finish_at, idProject, idUser);
                 }
             }
 
@@ -121,7 +130,7 @@ public class TaskRepository implements ITaskRepository {
 
     @Override
     public List<Task> findAll() {
-        String sql = "SELECT id, content, created_at, task_id, user_id FROM tasks";
+        String sql = "SELECT id, name, type, status, created_at, finish_at, id_project, id_user FROM tasks";
         List<Task> tasks = new ArrayList<>();
         Connection conn = null;
 
@@ -131,7 +140,8 @@ public class TaskRepository implements ITaskRepository {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                Task task = new Task(
+                Task task = TaskFactory.createTask(
+                        rs.getString("type"),
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getBoolean("status"),
