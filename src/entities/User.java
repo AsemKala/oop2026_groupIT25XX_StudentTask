@@ -67,6 +67,6 @@ public class User {
 
 
     public String toString(){
-        return "Id: " + id + "\nName: " + name + "\nEmail: " + email;
+        return "Id: " + id + "\nName: " + name + "\nEmail: " + email + "\n";
     }
 }
