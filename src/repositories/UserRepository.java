@@ -10,7 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository implements IUserRepository {
-    private final IDBPool databasePool= SuperbaseDB.getInstance();
+
+    private final IDBPool databasePool;
+
+    public UserRepository(IDBPool pool) {
+        this.databasePool = pool;
+    }
 
     @Override
     public void create(User user) {

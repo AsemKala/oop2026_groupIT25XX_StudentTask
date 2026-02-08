@@ -10,7 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectRepository implements IProjectRepository {
-    private final IDBPool databasePool = SuperbaseDB.getInstance();
+
+    private final IDBPool databasePool;
+
+    public ProjectRepository(IDBPool pool) {
+        this.databasePool = pool;
+    }
 
     @Override
     public void create(Project project) {

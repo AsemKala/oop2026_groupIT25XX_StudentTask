@@ -22,10 +22,10 @@ public class Main {
 //        myUser.setGroup("IT-2508");
 //        myUser.setEmail("azamat@example.com");
 
-        IUserRepository userRepo = new UserRepository();
+        IUserRepository userRepo = new UserRepository(SuperbaseDB.getInstance());
         UserService userService = new UserService(userRepo);
 
-        IProjectRepository projectRepo = new ProjectRepository();
+        IProjectRepository projectRepo = new ProjectRepository(SuperbaseDB.getInstance());
 
 //        userService.creteUser(myUser);
 

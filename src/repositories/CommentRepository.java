@@ -10,7 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommentRepository implements ICommentRepository {
-    private final IDBPool databasePool = SuperbaseDB.getInstance();
+
+    private final IDBPool databasePool;
+
+    public CommentRepository(IDBPool pool) {
+        this.databasePool = pool;
+    }
 
     @Override
     public void create(Comment comment) {

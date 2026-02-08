@@ -13,7 +13,12 @@ import java.util.List;
 
 
 public class TaskRepository implements ITaskRepository {
-    private final IDBPool databasePool = SuperbaseDB.getInstance();
+
+    private final IDBPool databasePool;
+
+    public TaskRepository(IDBPool pool) {
+        this.databasePool = pool;
+    }
 
     @Override
     public void create(Task task) {
